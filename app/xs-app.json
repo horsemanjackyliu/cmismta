@@ -1,0 +1,18 @@
+{
+  "welcomeFile": "index.html",
+  "authenticationMethod": "route",
+  "routes": [
+    {
+      "source": "^/srv/(.*)$",
+      "authenticationType": "xsuaa",
+      "scope": "$XSAPPNAME.User",
+      "destination": "srv"
+    },
+    {
+      "source": "/(.*)",
+      "authenticationType": "xsuaa",
+      "scope": "$XSAPPNAME.User",
+      "localDir": "resources"
+    }
+  ]
+}

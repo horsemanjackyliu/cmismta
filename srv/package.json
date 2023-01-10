@@ -1,0 +1,13 @@
+{
+    "name": "cmismta-srv",
+    "dependencies": {
+        "express": "latest",
+        "@sap/xsenv": "latest",
+        "@sap/xssec": "latest",
+        "passport": "latest",
+        "cmis": "^1.0.3"
+    },
+    "scripts": {
+        "start": "node server.js"
+    }
+}

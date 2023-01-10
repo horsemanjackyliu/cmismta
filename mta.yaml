@@ -1,0 +1,62 @@
+ID: cmismta
+_schema-version: "3.1"
+version: 0.0.1
+
+parameters:
+  enable-parallel-deployments: true
+
+modules:
+
+  - name: cmismta-srv
+    type: nodejs
+    path: srv
+    build-parameters:
+      ignore:
+        - default-*.json
+        - .env
+        - "*node_modules*"
+        - package-lock.json
+    parameters:
+      disk-quota: 512M
+      memory: 256M
+    provides:
+      - name: srv_api
+        properties:
+          url: ${default-url}
+    requires:
+      - name: cmismta-uaa
+      - name: dmsfree
+
+  - name: cmismta-app
+    type: approuter.nodejs
+    path: app
+    build-parameters:
+      ignore:
+        - default-*.json
+        - .env
+        - "*node_modules*"
+        - package-lock.json
+    parameters:
+      disk-quota: 512M
+      memory: 256M
+    requires:
+      - name: cmismta-uaa
+      - name: srv_api
+        group: destinations
+        properties:
+          name: srv
+          url: ~{url}
+          forwardAuthToken: true
+
+resources:
+  - name: cmismta-uaa
+    type: org.cloudfoundry.managed-service
+    parameters:
+      path: ./xs-security.json
+      service-plan: application
+      service: xsuaa
+  - name: dmsfree
+    type: org.cloudfoundry.managed-service
+    parameters: 
+      service-plan: free
+      service: sdm
